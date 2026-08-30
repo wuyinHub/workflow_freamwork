@@ -1,0 +1,8 @@
+# Project-level Codex configuration.
+#
+# Keep the reusable template conservative. Add project-specific settings only
+# when a real project requires them, and verify current Codex documentation
+# before adding options whose behavior may change over time.
+#
+# Durable project-working instructions belong in ../AGENTS.md.
+# Reusable workflows belong in ../.agents/skills/.
