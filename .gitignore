@@ -1,0 +1,27 @@
+# Secrets and local environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# IDE / OS metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Common dependency/build output
+node_modules/
+dist/
+build/
+target/
+coverage/
+
+# Local Codex/user-specific state (if introduced later)
+.codex/local*
