@@ -11,39 +11,56 @@ AI-assisted development workflow template for a human-in-the-loop ChatGPT + GitH
 
 The intended flow is:
 
-`ChatGPT planning -> human approval -> GitHub project state -> manual Codex trigger -> task branch -> implementation and verification -> push -> Pull Request -> human review -> merge -> project-state closeout`
+`ChatGPT planning -> human approval -> GitHub project state -> Codex -> task branch -> implementation and verification -> Pull Request -> human review -> merge -> project-state closeout`
+
+## Everyday Prompts
+
+Most work can use these four prompts:
+
+```text
+规划 Txxx，先不要写入项目。
+
+确认 Txxx，写入项目。
+
+按照 AGENTS.md 执行 Txxx，交付 PR。
+
+检查 Txxx 的 PR 和验收证据，无阻塞问题后合并并收尾。
+```
+
+To resume interrupted work:
+
+```text
+继续 Txxx。先核对已有分支、提交和 PR，从未完成的步骤恢复。
+```
+
+The final review prompt authorizes merge and closeout only when review finds no blocking problem. If a check is unavailable or evidence is insufficient, report the gap instead of treating it as passed.
 
 ## Repository State
 
 - `AGENTS.md` defines how Codex should work in the repository.
-- `docs/PROJECT.md` describes the project purpose, scope, stack, current stage, and priorities.
+- `docs/PROJECT.md` describes the project, scope, stack, current stage, priorities, and working commands.
 - `docs/DECISIONS.md` records durable approved decisions and their history.
 - `tasks/active/` contains explicitly approved executable tasks.
 - `tasks/completed/` contains accepted and closed-out task records.
-- `tasks/TASK_TEMPLATE.md` defines the standard task contract.
-- `.agents/skills/` is available for reusable skills when a real repeated need appears.
-- `.codex/config.toml` is available for project-level Codex configuration without forcing personal model settings into the template.
+- `tasks/TASK_TEMPLATE.md` defines the standard task contract and evidence record.
+- `.agents/skills/` is available when a repeated project workflow justifies a reusable skill.
+- `.codex/config.toml` is available for project-level configuration without forcing personal model settings into the template.
 
 ## Approval Rule
 
-Discussion is not execution permission.
-
-Planning and brainstorming may happen freely, but a task should only become executable after explicit human approval and placement in `tasks/active/`.
+Discussion is not execution permission. A task becomes executable only after explicit human approval and placement in `tasks/active/` with status `READY`.
 
 ## Change Boundaries
 
-After explicit human approval, planning/project-state changes such as `docs/PROJECT.md`, `docs/DECISIONS.md`, and `tasks/` may be maintained directly on `main` by the planning layer.
-
-Product implementation should normally be performed by Codex on a dedicated task branch and delivered through a Pull Request before entering `main`.
+After explicit approval, planning and project-state changes may be maintained directly on `main`. Product implementation should normally use a dedicated task branch and Pull Request.
 
 ## Delivery and Closeout
 
-Implementation success, delivery success, and project-state completion are different milestones.
+Implementation success, delivery success, and project-state completion are different milestones. If delivery is interrupted, preserve valid work and continue from the failed step.
 
-A task may be implemented and verified locally while push or Pull Request creation is blocked. In that case, preserve the valid work and retry the failed delivery step rather than redoing the implementation.
-
-After a Pull Request is accepted and merged, complete project-state closeout by moving the task from `tasks/active/` to `tasks/completed/` and updating `docs/PROJECT.md` as appropriate.
+After a Pull Request is accepted and merged, move the task from `tasks/active/` to `tasks/completed/`, record the evidence, and update `docs/PROJECT.md` as appropriate. A single explicit instruction to “merge and close out” may authorize both actions.
 
 ## Design Principle
 
-Keep the workflow minimal and expandable. Do not add frameworks, automation, MCP servers, hooks, skills, CI systems, or other machinery merely because they are available. Add them when repeated project needs justify the additional complexity.
+Keep the workflow minimal and expandable. Add automation, CI, hooks, integrations, or skills only when a repeated project need justifies them.
+
